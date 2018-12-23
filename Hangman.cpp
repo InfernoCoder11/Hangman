@@ -5,7 +5,7 @@
 using namespace std;
 
 // Function Prototypes
-int Game(char Words[][20]);
+int Game(char [][20]);
 int random();
 
 // Global Variable Declarations
@@ -23,13 +23,20 @@ int main(){
     bool Play = 1;
     while (Play){
         Game(Words);
+        Play = 0; //Just for now
     }
     return 0;
 }
 
 int Game(char Words[][20]){
     char Word[20];
+    int LengthOfWord;
+
     strcpy(Word, Words[random()]);
+    LengthOfWord = strlen(Word);
+    for (int i = 0; i < LengthOfWord; ++i)
+        cout<<"_ ";
+    cout<<endl<<"Number of letters: "<<LengthOfWord<<endl;
     return 0;
 }
 
