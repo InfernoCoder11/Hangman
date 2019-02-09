@@ -6,12 +6,13 @@ using namespace std;
 
 // Function Prototypes
 int Game(char [][20]);
-void CreateDrawWord(char [], int);
+void CreateDrawWord(char[], char [], int);
 bool PrintDrawWord(char [], char[], char[], int);
 int random();
 
 // Global Variable Declarations
 int NumberOfWords = 0;
+const int chances = 7;
 
 int main(){
     srand(time(0)); // Seed rand() with system time
@@ -31,15 +32,16 @@ int main(){
 }
 
 int Game(char Words[][20]){
-    char Word[20], DrawWord[40], Guesses[7];
+    char Word[20], DrawWord[40], Guesses[chances];
     int LengthOfWord, c = 0;
     bool Guessed = 0, result;
 
     strcpy(Word, Words[random()]);
     LengthOfWord = strlen(Word);
-    CreateDrawWord(DrawWord, LengthOfWord);
+    CreateDrawWord(Word, DrawWord, LengthOfWord);
     cout<<"Length of Word: "<<LengthOfWord<<endl;
     while (!Guessed){
+        cout<<"Number of guesses left: "<<chances - c<<endl;
         cout<<"Enter your guess: ";
         cin>>Guesses[c++];
         result = PrintDrawWord(Word, DrawWord, Guesses, c);
@@ -52,10 +54,18 @@ int Game(char Words[][20]){
     return 0;
 }
 
-void CreateDrawWord(char DrawWord[], int LengthOfWord){
+void CreateDrawWord(char Word[], char DrawWord[], int LengthOfWord){
     int i, c = 0;
     for (i = 0; i < LengthOfWord; ++i){
-        DrawWord[c++] = '_';
+        switch(Word[i]){
+            case 'a':
+            case 'e':
+            case 'i':
+            case 'o':
+            case 'u': DrawWord[c++] = Word[i];
+                      break;
+            default: DrawWord[c++] = '_';
+        }
         DrawWord[c++] = ' ';
     }
     DrawWord[c++] = '\0';
@@ -65,8 +75,8 @@ void CreateDrawWord(char DrawWord[], int LengthOfWord){
 bool PrintDrawWord(char Word[], char DrawWord[], char Guesses[], int n){
     bool result = 0;
     int i, j;
-    for (i = 0; i < n; ++i)
-        for (j = 0; Word[j] != '\0'; ++j)
+    for (j = 0; Word[j] != '\0'; ++j)
+        for (i = 0; i < n; ++i)
             if (Guesses[i] == Word[j])
                 DrawWord[j*2] = Guesses[i];
     for (j = 0; Word[j] != '\0'; ++j)
