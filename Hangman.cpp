@@ -1,5 +1,6 @@
 # include <iostream>
 # include <time.h>
+# include <conio.h>
 # include <string.h>
 
 using namespace std;
@@ -27,6 +28,7 @@ int main(){
     bool Play = 1;
     while (Play){
         Game(Words);
+        getch();
         Play = 0; //Just for now
     }
     return 0;
@@ -40,7 +42,7 @@ int Game(char Words[][20]){
     strcpy(Word, Words[random()]);
     LengthOfWord = strlen(Word);
     CreateDrawWord(Word, DrawWord, LengthOfWord);
-    cout<<endl<<"Number of letters: "<<LengthOfWord<<endl;
+    cout<<"Number of letters: "<<LengthOfWord<<endl;
     while (!Guessed){
         cout<<"Number of guesses left: "<<chances - c<<endl;
         cout<<"Enter your guess: ";
