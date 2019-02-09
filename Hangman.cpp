@@ -8,6 +8,7 @@ using namespace std;
 int Game(char [][20]);
 void CreateDrawWord(char[], char [], int);
 bool PrintDrawWord(char [], char[], char[], int);
+bool WinCheck(char []);
 int random();
 
 // Global Variable Declarations
@@ -39,7 +40,7 @@ int Game(char Words[][20]){
     strcpy(Word, Words[random()]);
     LengthOfWord = strlen(Word);
     CreateDrawWord(Word, DrawWord, LengthOfWord);
-    cout<<"Length of Word: "<<LengthOfWord<<endl;
+    cout<<endl<<"Number of letters: "<<LengthOfWord<<endl;
     while (!Guessed){
         cout<<"Number of guesses left: "<<chances - c<<endl;
         cout<<"Enter your guess: ";
@@ -49,9 +50,17 @@ int Game(char Words[][20]){
             cout<<"Wrong Guess!"<<endl;
         else
             cout<<"Correct Guess!"<<endl;
+        if (WinCheck(DrawWord)){
+            cout<<"Congratulations, you have guessed the word!"<<endl;
+            return 0;
+        }
+        else if (c == chances){
+            cout<<"You are out of chances!"<<endl;
+            cout<<"The correct word is: "<<Word<<endl;
+            return -1;
+        }
     }
-    cout<<endl<<"Number of letters: "<<LengthOfWord<<endl;
-    return 0;
+    return -2;
 }
 
 void CreateDrawWord(char Word[], char DrawWord[], int LengthOfWord){
@@ -84,6 +93,14 @@ bool PrintDrawWord(char Word[], char DrawWord[], char Guesses[], int n){
             result = 1;
     cout<<DrawWord<<endl;
     return result;
+}
+
+bool WinCheck(char DrawWord[]){
+    bool Win = 1;
+    for (int i = 0; DrawWord[i] != '\0'; i += 2)
+        if (DrawWord[i] == '_')
+            Win = 0;
+    return Win;
 }
 
 int random(){
