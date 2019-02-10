@@ -21,6 +21,7 @@ void PrintGameRules();
 // Global Variable Declarations
 int NumberOfWords = 0;
 const int chances = 7;
+int Score = 0;
 char Words[][20] = {"intelligent", // A random word will be selected from this list
                         "unstoppable", "hangman",
                         "hungry", "funny",
@@ -47,17 +48,21 @@ char Words[][20] = {"intelligent", // A random word will be selected from this l
                         }; // 45 words
 
 int main(){
+    char Play = 'Y';
     PrintGameRules();
     srand(time(0)); // Seed rand() with system time
     NumberOfWords = sizeof(Words)/sizeof(Words[0]);
-    char Play = 'Y';
     while (Play == 'Y'){
         clrscr();
-        Game();
-        cout<<"Enter 'y' if you want to play again"<<endl;
+        cout<<"Your current score is: "<<Score<<endl;
+        Score += Game();
+        cout<<"Your current score is: "<<Score<<endl;
+        cout<<"Enter 'y' if you want to play the next round"<<endl;
         cin>>Play;
         Play = toupper(Play);
     }
+    cout<<"Your final score: "<<Score;
+    getch();
     return 0;
 }
 
@@ -70,8 +75,8 @@ int Game(){
     strcpy(Word, Words[random()]);
     LengthOfWord = strlen(Word);
     CreateDrawWord(Word, DrawWord, LengthOfWord);
-    cout<<"Number of letters: "<<LengthOfWord<<endl;
     while (!Guessed){
+        cout<<"Number of letters: "<<LengthOfWord<<endl;
         cout<<"Number of guesses left: "<<chances - c<<endl;
         PrintAllGuesses(AllGuesses, c);
         cout<<endl<<"Enter your guess: ";
@@ -87,7 +92,7 @@ int Game(){
             cout<<"Correct Guess!"<<endl;
         if (WinCheck(DrawWord)){
             cout<<"Congratulations, you have guessed the word!"<<endl;
-            return 0;
+            return 4;
         }
         else if (c == chances){
             cout<<"You are out of chances!"<<endl;
@@ -124,6 +129,10 @@ bool PrintDrawWord(char Word[], char DrawWord[], char Guess[], char Guesses[], i
         for (i = 0; DrawWord[i] != '\0'; i += 2)
             if (DrawWord[i] == '_')
                 DrawWord[i] = Word[i/2];
+        cout<<DrawWord<<endl;
+        return result;
+    }
+    if (strlen(Guess) > 1){
         cout<<DrawWord<<endl;
         return result;
     }
@@ -178,6 +187,7 @@ void PrintGameRules(){
     cout<<" 4) You can either enter a character to check if it is in the word,"<<endl;
     cout<<"    or you can enter the whole word to check if it is correct"<<endl;
     cout<<" 5) You only have "<<chances<<" attempts to guess the word"<<endl;
+    cout<<" 6) Your current score is 0. +4 if you guess the word correctly and -1 if you don't"<<endl;
     cout<<"\tAll The Best!"<<endl;
     cout<<"Enter any character to continue....."<<endl;
     cout<<".......................................................................................";
