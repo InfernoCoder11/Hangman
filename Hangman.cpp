@@ -13,6 +13,7 @@ void CreateDrawWord(char[], char [], int);
 bool PrintDrawWord(char [], char[], char[], char[], int);
 bool WinCheck(char []); // Check if player has met winning conditions or not
 int random();
+void ConvertToLower(char []);
 void clrscr();
 void PrintGameRules();
 
@@ -24,10 +25,8 @@ int main(){
     PrintGameRules();
     srand(time(0)); // Seed rand() with system time
     char Words[][20] = {"intelligent", // A random word will be selected from this list
-                        "unstoppable",
-                        "hangman",
-                        "hungry",
-                        "funny",
+                        "unstoppable", "hangman",
+                        "hungry", "funny",
                         };
     NumberOfWords = sizeof(Words)/sizeof(Words[0]);
     char Play = 'Y';
@@ -54,6 +53,7 @@ int Game(char Words[][20]){
         cout<<"Number of guesses left: "<<chances - c<<endl;
         cout<<"Enter your guess: ";
         cin>>Guess;
+        ConvertToLower(Guess);
         Guesses[c++] = Guess[0];
         clrscr();
         result = PrintDrawWord(Word, DrawWord, Guess, Guesses, c);
@@ -126,6 +126,11 @@ int random(){
     int rnd = rand();
     rnd = rnd % NumberOfWords;
     return rnd;
+}
+
+void ConvertToLower(char Guess[]){
+    for (int i = 0; Guess[i] != '\0'; ++i)
+        Guess[i] = tolower(Guess[i]);
 }
 
 void clrscr(){
