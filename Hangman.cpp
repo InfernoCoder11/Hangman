@@ -14,6 +14,7 @@ bool PrintDrawWord(char [], char[], char[], char[], int);
 bool WinCheck(char []); // Check if player has met winning conditions or not
 int random();
 void ConvertToLower(char []);
+void PrintAllGuesses(char [][20], int);
 void clrscr();
 void PrintGameRules();
 
@@ -62,6 +63,7 @@ int main(){
 
 int Game(){
     char Word[20], DrawWord[40], Guess[20], Guesses[chances];
+    char AllGuesses[chances][20];
     int LengthOfWord, c = 0;
     bool Guessed = 0, result;
 
@@ -71,9 +73,11 @@ int Game(){
     cout<<"Number of letters: "<<LengthOfWord<<endl;
     while (!Guessed){
         cout<<"Number of guesses left: "<<chances - c<<endl;
-        cout<<"Enter your guess: ";
+        PrintAllGuesses(AllGuesses, c);
+        cout<<endl<<"Enter your guess: ";
         cin>>Guess;
         ConvertToLower(Guess);
+        strcpy(AllGuesses[c], Guess);
         Guesses[c++] = Guess[0];
         clrscr();
         result = PrintDrawWord(Word, DrawWord, Guess, Guesses, c);
@@ -151,6 +155,15 @@ int random(){
 void ConvertToLower(char Guess[]){
     for (int i = 0; Guess[i] != '\0'; ++i)
         Guess[i] = tolower(Guess[i]);
+}
+
+void PrintAllGuesses(char AllGuesses[][20], int n){
+    cout<<"Guesses till now: ";
+    if (n == 0)
+        cout<<"nil";
+    else
+        for (int i = 0; i < n; ++i)
+            cout<<AllGuesses[i]<<" ";
 }
 
 void clrscr(){
