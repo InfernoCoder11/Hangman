@@ -2,7 +2,8 @@
 # include <time.h> // For srand()
 # include <conio.h>
 # include <string.h>
-# include <stdlib.h>
+# include <stdlib.h> // For system()
+# include <ctype.h>
 
 using namespace std;
 
@@ -29,11 +30,13 @@ int main(){
                         "funny",
                         };
     NumberOfWords = sizeof(Words)/sizeof(Words[0]);
-    bool Play = 1;
-    while (Play){
+    char Play = 'Y';
+    while (Play == 'Y'){
+        clrscr();
         Game(Words);
-        getch();
-        Play = 0; //Just for now
+        cout<<"Enter 'Y' if you want to play again"<<endl;
+        cin>>Play;
+        Play = toupper(Play);
     }
     return 0;
 }
