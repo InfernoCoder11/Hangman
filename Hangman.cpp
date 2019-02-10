@@ -3,12 +3,12 @@
 # include <conio.h>
 # include <string.h>
 # include <stdlib.h> // For system()
-# include <ctype.h>
+# include <ctype.h> // For toupper(), tolower()
 
 using namespace std;
 
 // Function Prototypes
-int Game(char [][20]);
+int Game();
 void CreateDrawWord(char[], char [], int);
 bool PrintDrawWord(char [], char[], char[], char[], int);
 bool WinCheck(char []); // Check if player has met winning conditions or not
@@ -20,27 +20,47 @@ void PrintGameRules();
 // Global Variable Declarations
 int NumberOfWords = 0;
 const int chances = 7;
+char Words[][20] = {"intelligent", // A random word will be selected from this list
+                        "unstoppable", "hangman",
+                        "hungry", "funny",
+                        "arrangement", "attempt",
+                        "border", "breeze",
+                        "constant", "contrast",
+                        "cookie", "damage",
+                        "discussion", "donkey",
+                        "essential", "exchange",
+                        "explanation", "fireplace",
+                        "garage", "heading",
+                        "independent", "manufacture",
+                        "mathematics", "memory",
+                        "mission", "monkey",
+                        "neighbourhood", "occasion",
+                        "official", "palace",
+                        "poetry", "policeman",
+                        "positive", "practical",
+                        "promise", "remark",
+                        "rhyme", "satellite",
+                        "selection", "shake",
+                        "shallow", "simple",
+                        "thumb", "university"
+                        }; // 45 words
 
 int main(){
     PrintGameRules();
     srand(time(0)); // Seed rand() with system time
-    char Words[][20] = {"intelligent", // A random word will be selected from this list
-                        "unstoppable", "hangman",
-                        "hungry", "funny",
-                        };
     NumberOfWords = sizeof(Words)/sizeof(Words[0]);
     char Play = 'Y';
     while (Play == 'Y'){
         clrscr();
-        Game(Words);
-        cout<<"Enter 'Y' if you want to play again"<<endl;
+        Game();
+        cout<<"Enter 'y' if you want to play again"<<endl;
         cin>>Play;
         Play = toupper(Play);
     }
     return 0;
 }
 
-int Game(char Words[][20]){
+int Game(){
     char Word[20], DrawWord[40], Guess[20], Guesses[chances];
     int LengthOfWord, c = 0;
     bool Guessed = 0, result;
@@ -144,7 +164,7 @@ void PrintGameRules(){
     cout<<" 3) Based on this information, you have to guess the complete word"<<endl;
     cout<<" 4) You can either enter a character to check if it is in the word,"<<endl;
     cout<<"    or you can enter the whole word to check if it is correct"<<endl;
-    cout<<" 5) You only have 7 attempts to guess the word"<<endl;
+    cout<<" 5) You only have "<<chances<<" attempts to guess the word"<<endl;
     cout<<"\tAll The Best!"<<endl;
     cout<<"Enter any character to continue....."<<endl;
     cout<<".......................................................................................";
