@@ -7,18 +7,6 @@
 
 using namespace std;
 
-// Function Prototypes
-int Game();
-void CreateDrawWord(char[], char [], int);
-bool PrintDrawWord(char [], char[], char[], char[], int);
-bool WinCheck(char []); // Check if player has met winning conditions or not
-int random();
-void ConvertToLower(char []);
-void PrintAllGuesses(char [][50], int);
-void clrscr();
-void PrintGameRules();
-void PrintHangman(int);
-
 // Global Variable Declarations
 int NumberOfWords = 0;
 const int chances = 7;
@@ -48,6 +36,19 @@ char Words[][MaxLength] = {"intelligent", // A random word will be selected from
                         "shallow", "simple",
                         "thumb", "university"
                         }; // 45 words
+
+// Function Prototypes
+int Game();
+void CreateDrawWord(char[], char [], int);
+bool PrintDrawWord(char [], char[], char[], char[], int);
+bool WinCheck(char []); // Check if player has met winning conditions or not
+int random();
+void ConvertToLower(char []);
+void PrintAllGuesses(char [][MaxLength], int);
+bool CheckInput(char[][MaxLength], int, char[]);
+void clrscr();
+void PrintGameRules();
+void PrintHangman(int);
 
 int main(){
     char Play = 'Y';
@@ -82,8 +83,11 @@ int Game(){
         cout<<"Number of guesses left: "<<chances - NumberOfWrongAttempts<<endl;
         PrintAllGuesses(AllGuesses, c);
         PrintHangman(NumberOfWrongAttempts);
-        cout<<endl<<"Enter your guess: ";
-        cin>>Guess;
+        do{
+            cout<<endl<<"Enter your guess: ";
+            cin>>Guess;
+        }
+        while (!CheckInput(AllGuesses, c, Guess));
         ConvertToLower(Guess);
         strcpy(AllGuesses[c], Guess);
         Guesses[c++] = Guess[0];
@@ -179,6 +183,26 @@ void PrintAllGuesses(char AllGuesses[][MaxLength], int n){
     else
         for (int i = 0; i < n; ++i)
             cout<<AllGuesses[i]<<" ";
+}
+
+bool CheckInput(char AllGuesses[][MaxLength], int n, char Guess[]){
+    bool val = 1;
+    if (strlen(Guess) == 1)
+        switch(Guess[0]){
+            case 'a':
+            case 'e':
+            case 'i':
+            case 'o':
+            case 'u': cout<<"Vowels are already given!"<<endl;
+                      return 0;
+        }
+    for (int i = 0; i < n; ++i)
+        if (strcmp(AllGuesses[i], Guess) == 0){
+            val = 0;
+            cout<<"You have already entered "<<Guess<<endl;
+            return val;
+        }
+    return val;
 }
 
 void clrscr(){
