@@ -69,7 +69,7 @@ int main(){
 int Game(){
     char Word[20], DrawWord[40], Guess[20], Guesses[chances];
     char AllGuesses[chances][20];
-    int LengthOfWord, c = 0;
+    int LengthOfWord, c = 0, NumberOfWrongAttempts = 0;
     bool Guessed = 0, result;
 
     strcpy(Word, Words[random()]);
@@ -77,7 +77,7 @@ int Game(){
     CreateDrawWord(Word, DrawWord, LengthOfWord);
     while (!Guessed){
         cout<<"Number of letters: "<<LengthOfWord<<endl;
-        cout<<"Number of guesses left: "<<chances - c<<endl;
+        cout<<"Number of guesses left: "<<chances - NumberOfWrongAttempts<<endl;
         PrintAllGuesses(AllGuesses, c);
         cout<<endl<<"Enter your guess: ";
         cin>>Guess;
@@ -86,8 +86,10 @@ int Game(){
         Guesses[c++] = Guess[0];
         clrscr();
         result = PrintDrawWord(Word, DrawWord, Guess, Guesses, c);
-        if (!result)
+        if (!result){
             cout<<"Wrong Guess!"<<endl;
+            ++NumberOfWrongAttempts;
+        }
         else
             cout<<"Correct Guess!"<<endl;
         if (WinCheck(DrawWord)){
@@ -122,7 +124,7 @@ void CreateDrawWord(char Word[], char DrawWord[], int LengthOfWord){
 }
 
 bool PrintDrawWord(char Word[], char DrawWord[], char Guess[], char Guesses[], int n){
-    bool result = 0;
+    bool result = -0;
     int i, j;
     if (strcmp(Guess, Word) == 0){
         result = 1;
