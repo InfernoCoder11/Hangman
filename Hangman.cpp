@@ -7,22 +7,12 @@
 
 using namespace std;
 
-// Function Prototypes
-int Game();
-void CreateDrawWord(char[], char [], int);
-bool PrintDrawWord(char [], char[], char[], char[], int);
-bool WinCheck(char []); // Check if player has met winning conditions or not
-int random();
-void ConvertToLower(char []);
-void PrintAllGuesses(char [][20], int);
-void clrscr();
-void PrintGameRules();
-
 // Global Variable Declarations
 int NumberOfWords = 0;
 const int chances = 7;
+const int MaxLength = 50;
 int Score = 0;
-char Words[][20] = {"intelligent", // A random word will be selected from this list
+char Words[][MaxLength] = {"intelligent", // A random word will be selected from this list
                         "unstoppable", "hangman",
                         "hungry", "funny",
                         "arrangement", "attempt",
@@ -47,6 +37,19 @@ char Words[][20] = {"intelligent", // A random word will be selected from this l
                         "thumb", "university"
                         }; // 45 words
 
+// Function Prototypes
+int Game();
+void CreateDrawWord(char[], char [], int);
+bool PrintDrawWord(char [], char[], char[], char[], int);
+bool WinCheck(char []); // Check if player has met winning conditions or not
+int random();
+void ConvertToLower(char []);
+void PrintAllGuesses(char [][MaxLength], int);
+bool CheckInput(char[][MaxLength], int, char[]);
+void clrscr();
+void PrintGameRules();
+void PrintHangman(int);
+
 int main(){
     char Play = 'Y';
     PrintGameRules();
@@ -67,9 +70,9 @@ int main(){
 }
 
 int Game(){
-    char Word[20], DrawWord[40], Guess[20], Guesses[chances];
-    char AllGuesses[chances][20];
-    int LengthOfWord, c = 0;
+    char Word[MaxLength], DrawWord[2*MaxLength], Guess[MaxLength], Guesses[MaxLength];
+    char AllGuesses[MaxLength][MaxLength];
+    int LengthOfWord, c = 0, NumberOfWrongAttempts = 0;
     bool Guessed = 0, result;
 
     strcpy(Word, Words[random()]);
@@ -77,25 +80,32 @@ int Game(){
     CreateDrawWord(Word, DrawWord, LengthOfWord);
     while (!Guessed){
         cout<<"Number of letters: "<<LengthOfWord<<endl;
-        cout<<"Number of guesses left: "<<chances - c<<endl;
+        cout<<"Number of guesses left: "<<chances - NumberOfWrongAttempts<<endl;
         PrintAllGuesses(AllGuesses, c);
-        cout<<endl<<"Enter your guess: ";
-        cin>>Guess;
+        PrintHangman(NumberOfWrongAttempts);
+        do{
+            cout<<endl<<"Enter your guess: ";
+            cin>>Guess;
+        }
+        while (!CheckInput(AllGuesses, c, Guess));
         ConvertToLower(Guess);
         strcpy(AllGuesses[c], Guess);
         Guesses[c++] = Guess[0];
         clrscr();
         result = PrintDrawWord(Word, DrawWord, Guess, Guesses, c);
-        if (!result)
+        if (!result){
             cout<<"Wrong Guess!"<<endl;
+            ++NumberOfWrongAttempts;
+        }
         else
             cout<<"Correct Guess!"<<endl;
         if (WinCheck(DrawWord)){
             cout<<"Congratulations, you have guessed the word!"<<endl;
             return 4;
         }
-        else if (c == chances){
-            cout<<"You are out of chances!"<<endl;
+        else if (NumberOfWrongAttempts == chances){
+            cout<<"You are out of chances!";
+            PrintHangman(NumberOfWrongAttempts);
             cout<<"The correct word is: "<<Word<<endl;
             return -1;
         }
@@ -166,13 +176,33 @@ void ConvertToLower(char Guess[]){
         Guess[i] = tolower(Guess[i]);
 }
 
-void PrintAllGuesses(char AllGuesses[][20], int n){
+void PrintAllGuesses(char AllGuesses[][MaxLength], int n){
     cout<<"Guesses till now: ";
     if (n == 0)
         cout<<"nil";
     else
         for (int i = 0; i < n; ++i)
             cout<<AllGuesses[i]<<" ";
+}
+
+bool CheckInput(char AllGuesses[][MaxLength], int n, char Guess[]){
+    bool val = 1;
+    if (strlen(Guess) == 1)
+        switch(Guess[0]){
+            case 'a':
+            case 'e':
+            case 'i':
+            case 'o':
+            case 'u': cout<<"Vowels are already given!"<<endl;
+                      return 0;
+        }
+    for (int i = 0; i < n; ++i)
+        if (strcmp(AllGuesses[i], Guess) == 0){
+            val = 0;
+            cout<<"You have already entered "<<Guess<<endl;
+            return val;
+        }
+    return val;
 }
 
 void clrscr(){
@@ -193,4 +223,26 @@ void PrintGameRules(){
     cout<<".......................................................................................";
     getch();
     clrscr();
+}
+
+void PrintHangman(int n){
+    switch (n){
+        case 0: cout<<"\n _______\n  |    |\n  |    \n  |   \n  |    \n  |   \n _|_\n|   |______\n|          |\n|__________|\n";
+                break;
+        case 1: cout<<"\n _______\n  |    |\n  |    o\n  |   \n  |    \n  |   \n _|_\n|   |______\n|          |\n|__________|\n";
+                break;
+        case 2: cout<<"\n _______\n  |    |\n  |    o\n  |   /\n  |    \n  |   \n _|_\n|   |______\n|          |\n|__________|\n";
+                break;
+        case 3: cout<<"\n _______\n  |    |\n  |    o\n  |   /|\n  |    \n  |   \n _|_\n|   |______\n|          |\n|__________|\n";
+                break;
+        case 4: cout<<"\n _______\n  |    |\n  |    o\n  |   /|\\\n  |    \n  |   \n _|_\n|   |______\n|          |\n|__________|\n";
+                break;
+        case 5: cout<<"\n _______\n  |    |\n  |    o\n  |   /|\\\n  |    |\n  |   \n _|_\n|   |______\n|          |\n|__________|\n";
+                break;
+        case 6: cout<<"\n _______\n  |    |\n  |    o\n  |   /|\\\n  |    |\n  |   /\n _|_\n|   |______\n|          |\n|__________|\n";
+                break;
+        case 7: cout<<"\n _______\n  |    |\n  |    o\n  |   /|\\\n  |    |\n  |   / \\\n _|_\n|   |______\n|          |\n|__________|\n";
+                break;
+    }
+    cout<<endl;
 }
