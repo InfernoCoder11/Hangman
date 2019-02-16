@@ -57,14 +57,14 @@ int main(){
     NumberOfWords = sizeof(Words)/sizeof(Words[0]);
     while (Play == 'Y'){
         clrscr();
-        cout<<"Your current score is: "<<Score<<endl;
+        cout<<"  Your current score is: "<<Score<<endl;
         Score += Game(); // Game returns score of current round
-        cout<<"Your current score is: "<<Score<<endl;
-        cout<<"Enter 'y' if you want to play the next round"<<endl;
+        cout<<"  Your current score is: "<<Score<<endl;
+        cout<<"  Enter 'y' if you want to play the next round"<<endl<<"  ";
         cin>>Play;
         Play = toupper(Play);
     }
-    cout<<"Your final score: "<<Score;
+    cout<<"  Your final score: "<<Score;
     getch();
     return 0;
 }
@@ -79,12 +79,12 @@ int Game(){
     LengthOfWord = strlen(Word);
     CreateDrawWord(Word, DrawWord, LengthOfWord); // Initialze DrawWord with defualt values
     while (!Guessed){
-        cout<<"Number of letters: "<<LengthOfWord<<endl;
-        cout<<"Number of guesses left: "<<chances - NumberOfWrongAttempts<<endl;
+        cout<<"  Number of letters: "<<LengthOfWord<<endl;
+        cout<<"  Number of guesses left: "<<chances - NumberOfWrongAttempts<<endl;
         PrintAllGuesses(AllGuesses, c);
         PrintHangman(NumberOfWrongAttempts);
         do{
-            cout<<endl<<"Enter your guess: ";
+            cout<<endl<<"  Enter your guess: ";
             cin>>Guess;
         }
         while (!CheckInput(AllGuesses, c, Guess)); // Checks if Guess is a vowel or previously entered input
@@ -94,19 +94,19 @@ int Game(){
         clrscr();
         result = PrintDrawWord(Word, DrawWord, Guess, Guesses, c);
         if (!result){
-            cout<<"Wrong Guess!"<<endl;
+            cout<<"  Wrong Guess!"<<endl;
             ++NumberOfWrongAttempts;
         }
         else
-            cout<<"Correct Guess!"<<endl;
+            cout<<"  Correct Guess!"<<endl;
         if (WinCheck(DrawWord)){
-            cout<<"Congratulations, you have guessed the word!"<<endl;
+            cout<<"  Congratulations, you have guessed the word!"<<endl;
             return 4;
         }
         else if (NumberOfWrongAttempts == chances){
-            cout<<"You are out of chances!";
+            cout<<"  You are out of chances!";
             PrintHangman(NumberOfWrongAttempts);
-            cout<<"The correct word is: "<<Word<<endl;
+            cout<<"  The correct word is: "<<Word<<endl;
             return -1;
         }
     }
@@ -128,7 +128,7 @@ void CreateDrawWord(char Word[], char DrawWord[], int LengthOfWord){
         DrawWord[c++] = ' '; // Leaving space between each letter
     }
     DrawWord[c++] = '\0';
-    cout<<DrawWord<<endl;
+    cout<<"  "<<DrawWord<<endl;
 }
 
 bool PrintDrawWord(char Word[], char DrawWord[], char Guess[], char Guesses[], int n){
@@ -139,11 +139,11 @@ bool PrintDrawWord(char Word[], char DrawWord[], char Guess[], char Guesses[], i
         for (i = 0; DrawWord[i] != '\0'; i += 2)
             if (DrawWord[i] == '_')
                 DrawWord[i] = Word[i/2];
-        cout<<DrawWord<<endl;
+        cout<<"  "<<DrawWord<<endl;
         return result;
     }
     if (strlen(Guess) > 1){ //User enters an incorrect string
-        cout<<DrawWord<<endl;
+        cout<<"  "<<DrawWord<<endl;
         return result;
     }
     for (j = 0; Word[j] != '\0'; ++j)
@@ -153,7 +153,7 @@ bool PrintDrawWord(char Word[], char DrawWord[], char Guess[], char Guesses[], i
     for (j = 0; Word[j] != '\0'; ++j)
         if (Guesses[n - 1] == Word[j]) // Check if Guess matches any of the letters of Word
             result = 1;
-    cout<<DrawWord<<endl;
+    cout<<"  "<<DrawWord<<endl;
     return result;
 }
 
@@ -177,7 +177,7 @@ void ConvertToLower(char Guess[]){
 }
 
 void PrintAllGuesses(char AllGuesses[][MaxLength], int n){
-    cout<<"Guesses till now: ";
+    cout<<"  Guesses till now: ";
     if (n == 0)
         cout<<"nil";
     else
@@ -193,13 +193,13 @@ bool CheckInput(char AllGuesses[][MaxLength], int n, char Guess[]){
             case 'e':
             case 'i':
             case 'o':
-            case 'u': cout<<"Vowels are already given!"<<endl;
+            case 'u': cout<<"  Vowels are already given!"<<endl;
                       return 0;
         }
     for (int i = 0; i < n; ++i)
         if (strcmp(AllGuesses[i], Guess) == 0){ // Check if Guess has been entered before
             val = 0;
-            cout<<"You have already entered "<<Guess<<endl;
+            cout<<"  You have already entered "<<Guess<<endl;
             return val;
         }
     return val;
@@ -210,7 +210,7 @@ void clrscr(){
 }
 
 void PrintGameRules(){
-    cout<<"\tWord Guessing Game"<<endl;
+    cout<<"\tHangman - Word Guessing Game"<<endl;
     cout<<" 1) The vowels of a word will be given as per their respective positions in the word"<<endl;
     cout<<" 2) The positions of consonants will be marked by an underscore (_)"<<endl;
     cout<<" 3) Based on this information, you have to guess the complete word"<<endl;
@@ -219,7 +219,7 @@ void PrintGameRules(){
     cout<<" 5) You can guess wrongly a maximum of "<<chances<<" times"<<endl;
     cout<<" 6) Your current score is 0. +4 if you guess the word correctly and -1 if you don't"<<endl;
     cout<<"\tAll The Best!"<<endl;
-    cout<<"Enter any character to continue....."<<endl;
+    cout<<"  Enter any character to continue....."<<endl;
     cout<<".......................................................................................";
     getch();
     clrscr();
@@ -247,13 +247,14 @@ void PrintHangman(int n){
     cout<<endl;
 }
 
-//      _______
-//      |    |
-//      |    o
-//      |   /|\
-//      |    |
-//      |   / \
-//     _|_
-//    |   |______
-//    |          |
-//    |__________|
+/*     _______
+        |    |
+        |    o
+        |   /|\
+        |    |
+        |   / \
+       _|_
+      |   |______
+      |          |
+      |__________|
+*/
