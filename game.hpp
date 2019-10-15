@@ -252,6 +252,7 @@ bool printDrawWord(
 	return result;
 }
 
+/* Checks if no characters are left to guess. */
 bool winCheck(std::string& drawWord) {
 	bool win = true;
 
