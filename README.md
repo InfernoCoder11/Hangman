@@ -6,12 +6,12 @@ An attempt to make the popular Hangman game in C++.
 
 1. Linux:
 ```bash
-g++ main.cpp -O3 -Wall -Wextra -std=c++14
-./a.out
+g++ main.cpp -o hangman -O3 -Wall -Wextra -std=c++11
+./hangman
 ```
 
 2. Windows (with MinGW):
 ```PowerShell
-g++ .\main.cpp -O3 -Wall -Wextra -std=c++14
-.\a.exe
+g++ .\main.cpp -o hangman -O3 -Wall -Wextra -std=c++11
+.\hangman.exe
 ```

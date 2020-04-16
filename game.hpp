@@ -68,13 +68,14 @@ inline void printGameRules() {
 /* Main game. Returns score for a turn. */
 int game() {
 	std::string
-	word = WORDS[random(NUMBER_OF_WORDS)], // random word for a turn selected from WORDS
-	drawWord = createDrawWord(word), // word to be drawn with missing consonants, missing consonats are filled with correct guesses
+	// random word for a turn selected from WORDS
+	word = WORDS[random(NUMBER_OF_WORDS)],
+	// word to be drawn with missing consonants,
+	// missing consonats are filled with correct guesses
+	drawWord = createDrawWord(word),
 	guess; // user's guess
 
-	int
-	numWrongAttempts = 0,
-	turnScore = 0;
+	int numWrongAttempts = 0, turnScore = 0;
 
 	bool result;
 
@@ -92,10 +93,12 @@ int game() {
 		convertToLower(guess);
 		allGuesses.push_back(guess); // adding guess to list of all guesses
 		clearScreen();
-		result = printDrawWord(word, drawWord, guess); // checks guess against the word and updates drawWord
+		// checks guess against the word and updates drawWord
+		result = printDrawWord(word, drawWord, guess);
 		if (result == true) {
 			std::cout << "Correct Guess!\n";
-			if (winCheck(drawWord)) { // checking winning condition
+			// checking winning condition
+			if (winCheck(drawWord)) {
 				std::cout << "Congratulations, You have guessed the word!\n";
 				turnScore = 4;
 				break;
@@ -104,13 +107,14 @@ int game() {
 		else if (result == false) {
 			std::cout << "Wrong Guess!\n";
 			++numWrongAttempts;
-		}
-		else if (numWrongAttempts == NUMBER_OF_CHANCES) { // attempts over
-			std::cout << "You are out of chances!";
-			printHangman(numWrongAttempts);
-			std::cout << "The correct word is: " << word << "\n";
-			turnScore = -1;
-			break;
+			// check if attempts are over
+			if (numWrongAttempts == NUMBER_OF_CHANCES) {
+				std::cout << "You are out of chances!";
+				printHangman(numWrongAttempts);
+				std::cout << "The correct word is: " << word << "\n";
+				turnScore = -1;
+				break;
+			}
 		}
 	}
 	return turnScore;
@@ -120,22 +124,30 @@ int game() {
 std::string createDrawWord(std::string& word) {
 	std::string drawWord;
 
-	for (auto itr = word.begin(); itr < word.end(); ++itr) {
-		switch (*itr) {
+	for (const auto& w : word) {
+		switch (w) {
 			case 'a':
 			case 'e':
 			case 'i':
 			case 'o':
 			case 'u':
-				drawWord.push_back(*itr);
+				drawWord.push_back(w);
 				break;
 			default:
 				drawWord.push_back('_');
 		}
 		drawWord.push_back(' ');
 	}
-	std::cout << drawWord << "\n";
+	std::cout << drawWord << '\n';
 	return drawWord;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& v) {
+	for (const T& x : v) {
+		os << x << ' ';
+	}
+	return os;
 }
 
 /* Prints all guesses entered till now. */
@@ -145,9 +157,7 @@ void printAllGuesses(std::vector<std::string>& allGuesses) {
 		std::cout << "nil";
 	}
 	else {
-		for (std::string guess: allGuesses) {
-			std::cout << guess << " ";
-		}
+		std::cout << allGuesses;
 	}
 	std::cout << std::endl;
 }
@@ -202,6 +212,7 @@ bool checkGuessEntered(
 	) {
 	bool check = false;
 
+	// check if guess was a single character
 	if (inputGuess.size() == 1) {
 		switch (inputGuess[0]) {
 			case 'a':
@@ -211,12 +222,18 @@ bool checkGuessEntered(
 			case 'u':
 				std::cout << "Vowels are already given!\n";
 				check = true;
+				break;
+			default:
+				// check if guess was already entered
+				// goto justification: reduce code duplication
+				goto check;
 		}
 	}
 	else {
+		check:
 		for (std::string guess: allGuesses) {
 			if (guess == inputGuess) {
-				std::cout << inputGuess << " already entered!";
+				std::cout << inputGuess << " already entered!\n";
 				check = true;
 			}
 		}
@@ -228,11 +245,12 @@ bool checkGuessEntered(
 bool printDrawWord(
 	std::string& word,
 	std::string& drawWord,
-	std::string& guess//,
+	std::string& guess
 	) {
 	bool result = false;
 
-	if (guess.size() > 1 && guess == word) { // guess is not a character and is correct
+	// guess is correct
+	if (guess == word) {
 		result = true;
 		for (unsigned int i = 0; i < drawWord.size(); ++i) {
 			if (drawWord[i] == '_') {
@@ -240,14 +258,15 @@ bool printDrawWord(
 			}
 		}
 	}
-	else { // guess is a character, could be correct or incorrect
+	// guess is a character
+	else if (guess.size() == 1) {
 		for (unsigned int i = 0; i < word.size(); ++i) {
-				if (guess[0] == word[i]) { // guessed character is in the word
-					result = true;
-					drawWord[i * 2] = guess[0]; // replace missing consonant with the correctly guessed character
-				}
+			if (guess[0] == word[i]) { // guessed character is in the word
+				result = true;
+				drawWord[i * 2] = guess[0]; // replace missing consonant with the correctly guessed character
 			}
 		}
+	}
 	std::cout << drawWord << "\n";
 	return result;
 }
